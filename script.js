@@ -15,3 +15,25 @@ const error = {
   message: "The requested resource was not found",
 };
  */
+
+/* //functions
+function calculateBalance(income, expenses) {
+  //const income = 5000;
+  //const expenses = 2000;
+  const balance = income - expenses;
+  console.log("Your balance is: " + balance);
+  return balance;
+} */
+
+/* const calculateBalance = (income, expenses) => {
+  const balance = income - expenses;
+  console.log("Your balance is: " + balance);
+  return balance;
+};
+ */
+/* // SHORT HAND FUNCTION
+const calculateBalance = (income, expenses) => income - expenses;
+// function call
+const result = calculateBalance(10000, 5000);
+console.log(result);
+ */

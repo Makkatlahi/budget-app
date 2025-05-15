@@ -1,3 +1,18 @@
+// This is a JavaScript file for a simple budget tracker application
+// It allows users to add transactions (income or expenses), calculate the balance,
+// and remove transactions from the list.
+// The code uses DOM manipulation to update the UI dynamically based on user input.
+// The code also includes event listeners to handle form submission and transaction removal.
+// The code is structured to be easy to read and maintain, with clear variable names
+// and comments explaining each section.
+// Budget Tracker Application
+// This application allows users to track their income and expenses
+// and calculate their balance. Users can add transactions, view their income and expenses,
+// and remove transactions from the list. The application uses HTML, CSS, and JavaScript
+// to create a simple and user-friendly interface.
+
+// Selectors
+
 const transactionsEl = document.querySelector(".transactions");
 const balanceNumberEl = document.querySelector(".balance-number");
 const numberIncomeEl = document.querySelector(".number--income");
@@ -6,17 +21,64 @@ const formEl = document.querySelector(".form");
 const inputDescriptionEl = document.querySelector(".input--description");
 const inputAmountEl = document.querySelector(".input--amount");
 
+const submitHandler = (event) => {
+  // prevent the default behavior of the form
+  event.preventDefault();
+
+  // get the values from the input fields
+  const description = inputDescriptionEl.value;
+  const amount = +inputAmountEl.value;
+  console.log(description, amount);
+
+  // create a new transaction item HTML
+  const transactionItemHTML = `<li class="transaction transaction--${
+    amount > 0 ? "income" : "expense"
+  }">
+            <span class="transaction__text">${description}</span>
+            <span class="transaction__amount">${
+              amount > 0 ? "+" : ""
+            }${amount}</span>
+            <button class="transaction__btn">X</button>
+          </li>`;
+  // add the new transaction item to the transactions list
+  transactionsEl.insertAdjacentHTML("beforeend", transactionItemHTML);
+  // clear the input fields
+  inputDescriptionEl.value = "";
+  inputAmountEl.value = "";
+  // unfocus the input fields
+  inputDescriptionEl.blur();
+  inputAmountEl.blur();
+
+  // update income or expenses
+  if (amount > 0) {
+    const currentIncome = +numberIncomeEl.textContent;
+    const updatedIncome = +currentIncome + amount;
+    numberIncomeEl.textContent = updatedIncome;
+  } else {
+    const currentExpenses = numberExpensesEl.textContent;
+    const updatedExpenses = +currentExpenses + amount * -1;
+    numberExpensesEl.textContent = updatedExpenses;
+  }
+  // update balance
+  const income = +numberIncomeEl.textContent;
+  const expenses = +numberExpensesEl.textContent;
+  const updatedBalance = income - expenses;
+  balanceNumberEl.textContent = updatedBalance;
+
+  balanceNumberEl.style.color = income - expenses < 0 ? "red" : "black";
+};
+
 const clickHandler = (event) => {
   // remove the transaction item VISUALLY
-  const clickedEl = event.target.parentNode;
-  clickedEl.remove();
+  const clickedEl = event.target.parentNode; // get the parent element of the clicked element
+  clickedEl.remove(); // remove the transaction item from the DOM
 
   // update income or expenses
   const amountEl = clickedEl.querySelector(".transaction__amount");
   const amount = +amountEl.textContent;
 
   if (amount > 0) {
-    const currentIncome = numberIncomeEl.textContent;
+    const currentIncome = +numberIncomeEl.textContent;
     const updatedIncome = +currentIncome - amount;
     numberIncomeEl.textContent = updatedIncome;
   } else {
@@ -40,6 +102,8 @@ const clickHandler = (event) => {
 
   //console.log(typeof amount); // check the type of amount
 };
+
+formEl.addEventListener("submit", submitHandler);
 
 transactionsEl.addEventListener("click", clickHandler);
 
